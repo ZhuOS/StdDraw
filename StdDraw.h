@@ -4,11 +4,11 @@
 #include <GL/glut.h>
 #include<iostream>
 //显示界面的大小
-#define WINDOW_WIDTH	500
-#define WINDOW_HEIGHT	500
+#define WINDOW_WIDTH	700
+#define WINDOW_HEIGHT	600
 //方块大小
-#define BLOCK_WIDTH	    2
-#define BLOCK_HEIGHT	19
+#define BLOCK_WIDTH	    2 
+#define BLOCK_HEIGHT	49
 #define BLOCK_SPACING	1
 //界面容纳方块数量
 #define BLOCK_NUM_X	WINDOW_WIDTH/(BLOCK_WIDTH+BLOCK_SPACING)
@@ -23,6 +23,7 @@ public:
 	~Block(){}
 void Draw(int posX, int posY, T value, bool colorChoice)
     {
+		//std::cout<<X<<std::endl;
 		X = posX*(BLOCK_WIDTH+BLOCK_SPACING);
 		Y = posY*(BLOCK_HEIGHT+BLOCK_SPACING);
 		vl = value;
@@ -56,16 +57,16 @@ public:
 	void setColorArray(bool array[]){	colorArray = array;    }
     
 	//void setPos(int pos_x, int pos_y){	X = pos_x*100; Y = pos_y;	}
-
+	void clearColorArray(){ memset(colorArray,0,size);}
 	void Draw(){
-		std::cout<<"Y: "<<Y<<std::endl;	
+		std::cout<<"X: "<<X<<std::endl;	
 		Block<T> blk;
 		for(int i = 0; i < size; i++)
 			blk.Draw(X+i, Y, array[i], colorArray[i]);
 		Y--;
 		if(Y < 0){
-			Y = 25;
-			X = 100;
+			Y = WINDOW_HEIGHT/(BLOCK_HEIGHT+BLOCK_SPACING);
+			X += size+4;
 		}	
 	}
 
@@ -79,5 +80,5 @@ private:
 template<typename T>
 int StdDraw<T>::X = 0;
 template<typename T>
-int StdDraw<T>::Y = 25;
+int StdDraw<T>::Y = WINDOW_HEIGHT/(BLOCK_HEIGHT+BLOCK_SPACING);
 #endif

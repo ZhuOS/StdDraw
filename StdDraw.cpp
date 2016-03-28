@@ -4,6 +4,7 @@
 #include<unistd.h>
 #include<string>
 #include<string.h>
+#include<time.h>
 #include "StdDraw.h"
 using namespace std;
 
@@ -16,12 +17,10 @@ StdDraw<int> sdraw;
 // 显示函数
 
 void Display(void) {
-	glClear(GL_COLOR_BUFFER_BIT);
-	glClear(GL_DEPTH_BUFFER_BIT);
 	static int times = 0;
 	std::cout<<"times: "<<times++<<std::endl;
-    glClear(GL_COLOR_BUFFER_BIT);
-    glClear(GL_DEPTH_BUFFER_BIT);
+    //glClear(GL_COLOR_BUFFER_BIT);
+    //glClear(GL_DEPTH_BUFFER_BIT);
 
 
 	sdraw.Draw();
@@ -30,7 +29,8 @@ void Display(void) {
 }
 void Update(int value)
 {
-	cout<<value<<endl;
+//	cout<<value<<endl;
+    glutTimerFunc(500,Update,0);
 }
 void initOpenGL(int argc, char **argv){
 	
@@ -87,23 +87,25 @@ void sort(Type a[],int lo, int hi, bool colorArray[])
 		if(cmp < 0) {
 			colorArray[lt] = 1;
 			colorArray[i]  = 1;
-			exch(a, lt++, i++);
 			sdraw.setColorArray(colorArray);
-			//colorArray[lt-1] = 0;
-			//colorArray[i-1] = 0;
+			Display();
+			exch(a, lt++, i++);
 		}
 		else if(cmp > 0){
 			colorArray[i]  = 1;
 			colorArray[gt] = 1;
-			exch(a, i, gt--);
 			sdraw.setColorArray(colorArray);
-			//colorArray[i] = 0;
-			//colorArray[gt+1] = 0;
+			Display();
+			exch(a, i, gt--);
 		}
-		else i++;
-		//std::cout<<i<<std::endl;
-		glutPostRedisplay();
+		else{
+			//colorArray[i] = 1;
+			//sdraw.setColorArray(colorArray);
+			//Display();
+			i++;
 			
+		}
+		sdraw.clearColorArray();
 	}
 	sort(a, lo, lt-1,colorArray);
 	sort(a, gt+1, hi,colorArray);
@@ -113,16 +115,27 @@ int main(int argc, char **argv)
 	initOpenGL(argc, argv);
     glutDisplayFunc(Display);
 	//
+	srand((unsigned)time(NULL));
+	int size = 20;
+	//int nums[size];
+	int nums[]={14,13,14,13,18,13,19,13,11,12,
+				32,13,14,15,1,2,1,16,22,33};
+	//for(int i = 0; i<size; i++)
+	//	nums[i] = rand()%BLOCK_HEIGHT;
 
-	int nums[]={1,10,4,2,7,18,14,3,17,15};
-	int size =sizeof(nums)/sizeof(int); 
  	bool flagArray[size];
 	memset(flagArray, 0, size);
  	StdDraw<int> sd(nums, size);	
 	sdraw = sd;
 	
-	sort(nums,0,9,flagArray);
-    // 进入主循环
-    glutMainLoop();
+	
+    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_DEPTH_BUFFER_BIT);
+	//glutPostRedisplay();
+	sort(nums,0,size-1,flagArray);
+    
+	//system("pause");
+	// 进入主循环
+   glutMainLoop();
 	return 0;
 }
